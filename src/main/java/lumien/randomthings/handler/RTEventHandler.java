@@ -179,7 +179,7 @@ public class RTEventHandler {
     public void chunkLoad(ChunkEvent.Load event) {  
         World world = event.getWorld();  
         if (world.isRemote) {  
-            handleChunkLoadClient(event.getChunk());  
+            handleChunkLoadClient(event);  
         }  
         else {  
             IDynamicRedstoneManager manager = world.getCapability(IDynamicRedstoneManager.CAPABILITY_DYNAMIC_REDSTONE, null);  
@@ -191,8 +191,8 @@ public class RTEventHandler {
     }  
   
     @SideOnly(Side.CLIENT)  
-    private void handleChunkLoadClient(Chunk chunk) {  
-        SpectreIlluminationClientHandler.loadChunk(chunk);  
+    private void handleChunkLoadClient(ChunkEvent.Load event) {  
+        SpectreIlluminationClientHandler.loadChunk(event.getChunk());  
     }
 
     @SubscribeEvent
