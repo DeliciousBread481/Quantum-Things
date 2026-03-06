@@ -175,20 +175,25 @@ public class RTEventHandler {
 
 	private boolean spectreArmorStateTracker;
 
-	@SubscribeEvent
-	public void chunkLoad(ChunkEvent.Load event) {
-        World world = event.getWorld();
-        if (world.isRemote) {
-            SpectreIlluminationClientHandler.loadChunk(event.getChunk());
-        }
-        else {
-            IDynamicRedstoneManager manager = world.getCapability(IDynamicRedstoneManager.CAPABILITY_DYNAMIC_REDSTONE, null);
-            if (manager != null)
-            {
-                manager.runScheduledTasks(event.getChunk().getPos());
-            }
-        }
-	}
+	@SubscribeEvent  
+    public void chunkLoad(ChunkEvent.Load event) {  
+        World world = event.getWorld();  
+        if (world.isRemote) {  
+            handleChunkLoadClient(event.getChunk());  
+        }  
+        else {  
+            IDynamicRedstoneManager manager = world.getCapability(IDynamicRedstoneManager.CAPABILITY_DYNAMIC_REDSTONE, null);  
+            if (manager != null)  
+            {  
+                manager.runScheduledTasks(event.getChunk().getPos());  
+            }  
+        }  
+    }  
+  
+    @SideOnly(Side.CLIENT)  
+    private void handleChunkLoadClient(Chunk chunk) {  
+        SpectreIlluminationClientHandler.loadChunk(chunk);  
+    }
 
     @SubscribeEvent
     public void chunkUnload(ChunkEvent.Unload event) {
@@ -810,6 +815,7 @@ public class RTEventHandler {
 		}
 	}
 
+    @SideOnly(Side.CLIENT)
 	private void renderItemOverlay(RenderGameOverlayEvent event) {
 		ItemStack equippedItem;
 		ItemStack offHandItem;
@@ -880,6 +886,7 @@ public class RTEventHandler {
 		}
 	}
 
+    @SideOnly(Side.CLIENT)
 	private void renderBiomeSensor(RenderGameOverlayEvent event) {
 		Minecraft minecraft = Minecraft.getMinecraft();
 		Biome b = minecraft.world.getBiome(minecraft.player.getPosition());
@@ -1394,6 +1401,7 @@ public class RTEventHandler {
 		}
 	}
 
+    @SideOnly(Side.CLIENT)
 	private boolean toggleSpectreGL(int armorPieces, boolean enable) {
 		if (armorPieces <= 0)
 			return false;
@@ -1442,6 +1450,7 @@ public class RTEventHandler {
 		return pieces;
 	}
 
+    @SideOnly(Side.CLIENT)
 	private float getRelevantArmorAlpha(int armorPieces) {
 		if (Visual.FANCY_SPECTRE_ARMOR_TRANSPARENCY)
 			return 1.0F - (armorPieces / 6.0F);
