@@ -20,6 +20,7 @@ import lumien.randomthings.block.BlockCompressedSlimeBlock;
 import lumien.randomthings.block.BlockContactButton;
 import lumien.randomthings.block.BlockContactLever;
 import lumien.randomthings.block.ModBlocks;
+import lumien.randomthings.capability.bottledtime.IBottledTime;
 import lumien.randomthings.capability.redstone.IDynamicRedstoneManager;
 import lumien.randomthings.client.models.blocks.ModelCustomWorkbench;
 import lumien.randomthings.client.models.blocks.ModelFluidDisplay;
@@ -784,21 +785,36 @@ public class RTEventHandler {
 		}
 	}
 
-	@SubscribeEvent
-	@SideOnly(Side.CLIENT)
-	public void itemTooltip(ItemTooltipEvent event) {
-		if (event.getItemStack().hasTagCompound()) {
-			if (event.getItemStack().getTagCompound().hasKey("spectreAnchor")) {
-				event.getToolTip().add(1, TextFormatting.DARK_AQUA.toString()
-						+ I18n.format("tooltip.spectreAnchor.item") + TextFormatting.RESET.toString());
-			}
-
-			if (event.getItemStack().getTagCompound().hasKey("luminousEnchantment")) {
-				event.getToolTip().add(1, TextFormatting.YELLOW.toString() + I18n.format("tooltip.luminousEnchantment")
-						+ TextFormatting.RESET.toString());
-			}
-		}
-	}
+	@SubscribeEvent  
+    @SideOnly(Side.CLIENT)  
+    public void itemTooltip(ItemTooltipEvent event) {  
+        if (event.getItemStack().getItem() instanceof ItemTimeInABottle) {  
+            EntityPlayer player = event.getEntityPlayer();  
+            long storedTime = 0;  
+            if (player != null) {  
+                IBottledTime cap = player.getCapability(IBottledTime.CAPABILITY_BOTTLED_TIME, null);  
+                if (cap != null)  
+                    storedTime = cap.getBottledTime();  
+            }  
+            int storedSeconds = (int) (storedTime / 20);  
+            int hours = storedSeconds / 3600;  
+            int minutes = (storedSeconds % 3600) / 60;  
+            int seconds = storedSeconds % 60;  
+            event.getToolTip().add(I18n.format("tooltip.timeInABottle", hours, minutes, seconds));  
+        }  
+  
+        if (event.getItemStack().hasTagCompound()) {  
+            if (event.getItemStack().getTagCompound().hasKey("spectreAnchor")) {  
+                event.getToolTip().add(1, TextFormatting.DARK_AQUA.toString()  
+                        + I18n.format("tooltip.spectreAnchor.item") + TextFormatting.RESET.toString());  
+            }  
+  
+            if (event.getItemStack().getTagCompound().hasKey("luminousEnchantment")) {  
+                event.getToolTip().add(1, TextFormatting.YELLOW.toString() + I18n.format("tooltip.luminousEnchantment")  
+                        + TextFormatting.RESET.toString());  
+            }  
+        }  
+    }
 
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
