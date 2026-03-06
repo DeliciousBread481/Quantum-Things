@@ -56,6 +56,7 @@ import lumien.randomthings.item.ItemRezStone;
 import lumien.randomthings.item.ModItems;
 import lumien.randomthings.lib.IRTBlockColor;
 import lumien.randomthings.lib.IRTItemColor;
+import lumien.randomthings.network.ClientboundMessage;
 import lumien.randomthings.tileentity.TileEntityAncientFurnace;
 import lumien.randomthings.tileentity.TileEntityBiomeRadar;
 import lumien.randomthings.tileentity.TileEntityBlockDiaphanous;
@@ -302,4 +303,10 @@ public class ClientProxy extends CommonProxy
 		GlStateManager.popAttrib();
 		Minecraft.getMinecraft().entityRenderer.enableLightmap();
 	}
+	
+    @Override  
+    public void scheduleClientMessage(ClientboundMessage message)  
+    {  
+        Minecraft.getMinecraft().addScheduledTask(() -> message.handleOnClient(Minecraft.getMinecraft().player));  
+    }
 }

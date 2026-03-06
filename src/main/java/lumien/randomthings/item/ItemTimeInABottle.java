@@ -1,6 +1,5 @@
 package lumien.randomthings.item;
 
-import java.util.List;
 import java.util.Optional;
 
 import lumien.randomthings.config.Numbers;

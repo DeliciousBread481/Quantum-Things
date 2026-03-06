@@ -21,20 +21,6 @@ public interface ClientboundMessage extends IRTMessage
      */
     void handleOnClient(@Nonnull EntityPlayer player);
 
-    /**
-     * Call this from an {@link IMessageHandler} to handle the client-bound message.
-     * By default, for thread safety, this will always schedule work to be done on the main thread.
-     * Override this if you know you want to do work on the network thread.
-     *
-     * @param ctx The message context.
-     */
-    default void handleOnClient(MessageContext ctx)
-    {
-        Preconditions.checkArgument(ctx.side == Side.CLIENT);
-
-        Minecraft.getMinecraft().addScheduledTask(() -> handleOnClient(Minecraft.getMinecraft().player));
-    }
-
     abstract class NoReplyHandler<M extends ClientboundMessage> implements IMessageHandler<M, IMessage>
     {
         @Override

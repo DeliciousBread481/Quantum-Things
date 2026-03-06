@@ -1,6 +1,7 @@
 package lumien.randomthings;
 
 import lumien.randomthings.entitys.EntitySoul;
+import lumien.randomthings.network.ClientboundMessage;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
 public class CommonProxy
@@ -33,4 +34,8 @@ public class CommonProxy
 	{
 
 	}
+	public void scheduleClientMessage(ClientboundMessage message)  
+    {  
+    
+    }
 }
