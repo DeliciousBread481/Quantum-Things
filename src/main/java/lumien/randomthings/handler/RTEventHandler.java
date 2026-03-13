@@ -1285,35 +1285,36 @@ public class RTEventHandler {
 
 	@SubscribeEvent
 	public void livingDeath(LivingDeathEvent event) {
-		if (!event.getEntityLiving().world.isRemote) {
-			if (event.getSource().getTrueSource() != null && !(event.getSource().getTrueSource() instanceof FakePlayer)
-					&& event.getSource().getTrueSource() instanceof EntityPlayer
-					&& !(event.getEntity() instanceof EntitySpirit)) {
-				double chance = Numbers.SPIRIT_CHANCE_NORMAL;
+		if (event.getEntityLiving().world.isRemote)
+			return;
 
-				if (RTWorldInformation.isDragonDefeated())
-					chance += Numbers.SPIRIT_CHANCE_END_INCREASE;
+		if (event.getSource().getTrueSource() != null && !(event.getSource().getTrueSource() instanceof FakePlayer)
+				& event.getSource().getTrueSource() instanceof EntityPlayer
+				& !(event.getEntity() instanceof EntitySpirit)) {
+			double chance = Numbers.SPIRIT_CHANCE_NORMAL;
 
-				if (event.getEntityLiving().world.canBlockSeeSky(event.getEntityLiving().getPosition())
-						&& !event.getEntityLiving().world.isDaytime()) {
-					chance += event.getEntityLiving().world.getCurrentMoonPhaseFactor() / 100f
-							* Numbers.SPIRIT_CHANCE_MOON_MULT;
-				}
+			if (RTWorldInformation.isDragonDefeated())
+				chance += Numbers.SPIRIT_CHANCE_END_INCREASE;
 
-				if (Math.random() < chance) {
-					event.getEntityLiving().world.spawnEntity(new EntitySpirit(event.getEntityLiving().world,
-							event.getEntity().posX, event.getEntity().posY, event.getEntity().posZ));
-				}
+			if (event.getEntityLiving().world.canBlockSeeSky(event.getEntityLiving().getPosition())
+					&& !event.getEntityLiving().world.isDaytime()) {
+				chance += event.getEntityLiving().world.getCurrentMoonPhaseFactor() / 100f
+						* Numbers.SPIRIT_CHANCE_MOON_MULT;
 			}
 
-			if (event.getEntityLiving() instanceof EntityPlayer) {
-				if (!(event.getEntityLiving() instanceof FakePlayer)) {
-					EntityPlayer player = (EntityPlayer) event.getEntityLiving();
+			if (Math.random() < chance) {
+				event.getEntityLiving().world.spawnEntity(new EntitySpirit(event.getEntityLiving().world,
+						event.getEntity().posX, event.getEntity().posY, event.getEntity().posZ));
+			}
+		}
 
-					if (!event.isCanceled()) {
-						player.world.spawnEntity(new EntitySoul(player.world, player.posX, player.posY, player.posZ,
-								player.getGameProfile().getName()));
-					}
+		if (event.getEntityLiving() instanceof EntityPlayer) {
+			if (!(event.getEntityLiving() instanceof FakePlayer)) {
+				EntityPlayer player = (EntityPlayer) event.getEntityLiving();
+
+				if (!event.isCanceled()) {
+					player.world.spawnEntity(new EntitySoul(player.world, player.posX, player.posY, player.posZ,
+							player.getGameProfile().getName()));
 				}
 			}
 		}
